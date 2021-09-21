@@ -1,0 +1,134 @@
+.searchbar{
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.06);
+  background: #fff;
+  padding: 20px 0;
+  .container{
+    display: flex;
+    flex-direction: row;
+  }
+  .searchblk{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    .inputwrap{
+      input{
+        padding: 0 10px;
+        height: 35px;
+        border: 1px solid #ccc;
+        background-color: #f6f6f6;
+        border-radius: 5px;
+      }
+      .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root, .css-1kty9di-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
+        display: none !important;
+      }
+      .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+        border: 1px solid #ccc;
+      }
+      .css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
+        background-color: #f6f6f6;
+        input{
+          border: 0;
+        }
+      }
+      &:last-child{
+        margin-left: 10px;
+      }
+      &:first-child{
+        margin-left: 0;
+      }
+      .css-sghohy-MuiButtonBase-root-MuiButton-root{
+        background-color: #00CC99;
+      }
+    }
+    .swapbutton{
+      box-shadow: none;
+      border: 0;
+      background: none;
+    }
+    & + .searchblk{
+      margin-left: 15px;
+      padding-left: 15px;
+      border-left: 1px dashed #ccc;
+    }
+  }
+}
+
+.flights-main-wrapper{
+  padding: 40px 55px 80px 55px;
+  .container{
+    display: flex;
+    flex-direction: row;
+
+    .sidebar-wrapper{
+      padding: 20px;
+      width: 22%;
+      border: 1px solid #ccc;
+      h4{
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #000;
+        font-weight: 600;
+      }
+      .css-187mznn-MuiSlider-root{
+        color: #fff;
+
+        .css-14pt78w-MuiSlider-rail{
+          background-color: #00CC99;
+        }
+        .css-1gv0vcd-MuiSlider-track{
+          background-color: #00CC99;
+        }
+      }
+    }
+
+    .listing-wrapper{
+      flex: 1;
+      margin-left: 15px;
+      .filter-wrapper{
+        flex: 1;
+        ul{
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          height: 35px;
+          background: #E5F2EF;
+          box-shadow: 0 1px 8px 1px rgba(0,0,0,0.12);
+          border-bottom: 1px solid #E5E5E5;
+          li{
+            width: 15%;
+            text-align: center;
+            color: #0c9;
+            font-weight: 600;
+            line-height: 35px;
+
+            &:last-child{
+              flex: 1;
+            }
+          }
+        }
+      }
+
+      .flightcard{
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        background: #fff;
+        box-shadow: 0 1px 8px 1px rgba(0,0,0,0.12);
+        padding: 15px 0;
+        margin: 20px 0 0;
+        div{
+          width: 15%;
+          text-align: center;
+          p{
+            text-align: center;
+          }
+          &:last-child{
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+}
