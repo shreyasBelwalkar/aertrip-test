@@ -4,10 +4,11 @@ import Header from '../components/header';
 import SearchBar from '../components/flights/searchBar';
 import SideBar from '../components/flights/sidebar';
 import FlightsListing from '../components/flights/flightsListing';
-
+import Button from '@mui/material/Button';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Response from '../response.json';
-import { useHistory, useLocation, use } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
+import { Link } from "react-router-dom";
 
 const Flights = () => {
   const history = useHistory();
@@ -18,6 +19,15 @@ const Flights = () => {
   const [flights, setFlights] = useState([]);
   const [initialPrice, setInitialPrice] = useState([]);
   const [upDatedPrice, setUpDatedPrice] = useState([20, 37]);
+
+  const [heading, setHeading] = useState([
+    { title: "Airline", sortValue: "al", sortType: '' },
+    { title: "Depart", sortValue: "dt", sortType: '' },
+    { title: "Arrive", sortValue: "at", sortType: '' },
+    { title: "Duration", sortValue: "tt", sortType: '' },
+    { title: "Smart", sortValue: "", sortType: '' },
+    { title: "Price", sortValue: "farepr", sortType: '' }
+  ])
 
   useEffect(() => {
     initialData();
@@ -35,6 +45,8 @@ const Flights = () => {
       if (price < minValue) minValue = price;
       if (price > maxValue) maxValue = price;
     }
+    const params = new URLSearchParams({ min: minValue, max: maxValue });
+    history.replace({ pathname: location.pathname, search: params.toString() });
     setInitialPrice([
       minValue,
       maxValue
@@ -47,25 +59,97 @@ const Flights = () => {
       ]);
       filterDataOnPrice([params.get('min'), params.get('max')]);
     }
+    if (params.get('sort') && params.get('sortType')) {
+      sortData(params.get('sort'), params.get('sortType'))
+    }
   }
 
   const onPriceChange = (event, newValue) => {
-    console.log("value", newValue);
     const params = new URLSearchParams({ min: newValue[0], max: newValue[1] });
     history.replace({ pathname: location.pathname, search: params.toString() });
     setUpDatedPrice(newValue);
-    filterDataOnPrice(newValue)
+    filterDataOnPrice(newValue);
   }
 
   const filterDataOnPrice = (value) => {
     let data = Response.data.flights[0].results.j;
     let filterData = data.filter(function (newData) {
-      console.log("newData.farepr", newData.farepr);
       return newData.farepr >= value[0] && newData.farepr <= value[1];
     });
-
-    console.log("filterData", filterData);
     setFlights(filterData);
+  }
+
+  const onSorting = async (value, sortType) => {
+    // resetHeading();
+    const params = new URLSearchParams(window.location.search);
+    const queries = Array.from(params.keys()).reduce(
+      (acc, val) => ({ ...acc, [val]: params.get(val) }),
+      {}
+    );
+    let headings = heading;
+    let index = heading.findIndex(x => x.sortValue === value);
+    // sortType === 'asc' ? heading[index].sortType = 'desc' : heading[index].sortType = 'asc'
+    switch (heading[index].sortType) {
+      case 'asc':
+        heading[index].sortType = 'desc'
+        break;
+      case 'desc':
+        heading[index].sortType = 'asc'
+        break;
+      default:
+        heading[index].sortType = 'desc'
+        break;
+    }
+    setHeading(headings);
+    const sendQuery = new URLSearchParams({ ...queries, sort: value, sortType });
+    history.replace({ pathname: location.pathname, search: sendQuery.toString() });
+    sortData(value, sortType);
+  }
+
+  const resetHeading = () => {
+    setHeading([
+      { title: "Airline", sortValue: "al", sortType: '' },
+      { title: "Depart", sortValue: "dt", sortType: '' },
+      { title: "Arrive", sortValue: "at", sortType: '' },
+      { title: "Duration", sortValue: "tt", sortType: '' },
+      { title: "Smart", sortValue: "", sortType: '' },
+      { title: "Price", sortValue: "farepr", sortType: '' }
+    ])
+  }
+
+  const sortData = (value, sortType) => {
+    let sortData = flights.sort(compareValues(value, sortType));
+    setFlights(sortData);
+  }
+
+  function compareValues(key, order) {
+    return function innerSort(a, b) {
+      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+        return 0;
+      }
+
+      const varA = (typeof a[key] === 'string')
+        ? a[key].toUpperCase() : a[key];
+      const varB = (typeof b[key] === 'string')
+        ? b[key].toUpperCase() : b[key];
+
+      let comparison = 0;
+      if (varA > varB) {
+        comparison = 1;
+      } else if (varA < varB) {
+        comparison = -1;
+      }
+      return (
+        (order === 'desc') ? (comparison * -1) : comparison
+      );
+    };
+  }
+
+  const clearFilter = () => {
+    const params = new URLSearchParams({});
+    history.replace({ pathname: location.pathname, search: params.toString() });
+    resetHeading();
+    initialData();
   }
 
   return (
@@ -82,20 +166,32 @@ const Flights = () => {
 
         <div className="flights-main-wrapper">
           <div className="container">
-            <SideBar count={Response.data.completed} flightsData={flights} onPriceChange={onPriceChange} initialPrice={initialPrice} upDatedPrice={upDatedPrice} />
+            {(initialPrice.length || upDatedPrice.length) &&
+              <SideBar
+                count={{ total: Response.data.flights[0].results.j.length, updated: flights.length }}
+                onPriceChange={onPriceChange}
+                initialPrice={initialPrice}
+                upDatedPrice={upDatedPrice}
+                clearFilter={() => clearFilter()}
+              />}
 
             <div className="listing-wrapper">
               <div className="filter-wrapper">
                 <ul>
-                  <li>Airline</li>
-                  <li>Depart</li>
-                  <li>Arrive</li>
-                  <li>Duration</li>
-                  <li>Smart</li>
-                  <li>Price</li>
+                  {heading.map((heading, i) =>
+                    <li key={heading.title}>
+                      <Button
+                        variant="text"
+                        onClick={() => onSorting(heading.sortValue, heading.sortType)}>
+                        {heading.title}
+                        {heading.sortType === 'asc' && <span> &#8595;</span>}
+                        {heading.sortType === 'desc' && <span> &#8593;</span>}
+                      </Button>
+                    </li>
+                  )}
                 </ul>
               </div>
-              <FlightsListing flightData={flights} />
+              <FlightsListing data={data} flightData={flights} />
             </div>
           </div>
         </div>

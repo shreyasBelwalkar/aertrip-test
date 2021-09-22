@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
-  // console.log("useLocation", useLocation().pathname);
   return (
     <header className="header">
       <div>

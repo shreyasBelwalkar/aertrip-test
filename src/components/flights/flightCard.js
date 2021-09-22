@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
-const FlightCard = ({ flight }) => {
-  const [data, setData] = useState({});
+const FlightCard = ({ data, flight }) => {
+  const [flightData, setFlightData] = useState({});
 
   useEffect(() => {
-    setData(flight);
-    // console.log("leg", flight.leg);
-  }, [flight, data])
+    setFlightData(flight);
+  }, [data, flight])
 
   return (
-    <div className="flightcard">
-      <div>
-        <p>{(data && data.leg) && data.leg[0].al}</p>
+    <div className="flightCardWrapper">
+      <div className="flightcard">
+        <div>
+          <p>{(data && flightData && flightData.leg) && data.flights[0].results.aldet[flightData.leg[0].al]}</p>
+        </div>
+        <div>
+          <p>{(flightData && flightData.leg) && flight.leg[0].dt}</p>
+        </div>
+        <div>
+          <p>{(flightData && flightData.leg) && flight.leg[0].at}</p>
+        </div>
+        <div>
+          <p>{(flightData && flightData.leg) ? moment.unix(flightData.leg[0].tt).utc().format('H [h] mm [m] ss [s]') : ""}</p>
+        </div>
+        <div></div>
+        <div>
+          <p>&#8377; {(flightData && flightData.fare) && flightData.farepr}</p>
+        </div>
       </div>
-      <div>
-        <p>{(data && data.leg) && data.leg[0].dt}</p>
-      </div>
-      <div>
-        <p>{(data && data.leg) && data.leg[0].at}</p>
-      </div>
-      <div>
-        <p>{(data && data.leg) ? moment.unix(data.leg[0].tt).utc().format('H [h] mm [m] ss [s]') : ""}</p>
-      </div>
-      <div></div>
-      <div>
-        <p>&#8377; {(data && data.fare) && data.farepr}</p>
+
+      <div className="stopsList">
+        <p>
+          {(flightData && flightData.leg) && flightData.leg[0].all_ap.map((stop, i) =>
+            <span key={stop}>{stop}</span>
+          )}
+        </p>
       </div>
     </div>
   );

@@ -65,11 +65,46 @@
       padding: 20px;
       width: 22%;
       border: 1px solid #ccc;
-      h4{
+      .sideBarTop{
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        p{
+          font-size: 12px;
+          span{
+            font-weight: 600;
+          }
+        }
+        button{
+          font-weight: 600;
+          color: #0c9;
+          text-transform: none;
+          padding: 0;
+        }
+      }
+      .titlerow{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 10px;
-        font-size: 14px;
-        color: #000;
-        font-weight: 600;
+        h4{
+          font-size: 14px;
+          color: #000;
+          font-weight: 600;
+        }
+        button{
+          font-size: 12px;
+          font-weight: 600;
+          color: red;
+          text-transform: none;
+          padding: 0;
+          min-width: auto;
+        }
       }
       .css-187mznn-MuiSlider-root{
         color: #fff;
@@ -102,7 +137,16 @@
             color: #0c9;
             font-weight: 600;
             line-height: 35px;
-
+            button{
+              line-height: 25px;
+              font-weight: 600;
+              color: #0c9;
+              text-transform: none;
+              padding: 0;
+              span{
+                padding-left: 5px;
+              }
+            }
             &:last-child{
               flex: 1;
             }
@@ -110,22 +154,43 @@
         }
       }
 
-      .flightcard{
-        flex: 1;
-        display: flex;
-        flex-direction: row;
+      .flightCardWrapper{
         background: #fff;
-        box-shadow: 0 1px 8px 1px rgba(0,0,0,0.12);
-        padding: 15px 0;
-        margin: 20px 0 0;
-        div{
-          width: 15%;
-          text-align: center;
-          p{
+          box-shadow: 0 1px 8px 1px rgba(0,0,0,0.12);
+          padding: 15px 0;
+          margin: 20px 0 0;
+        .flightcard{
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          div{
+            width: 15%;
             text-align: center;
+            p{
+              text-align: center;
+            }
+            &:last-child{
+              flex: 1;
+            }
           }
-          &:last-child{
-            flex: 1;
+        }
+        .stopsList{
+          padding-left: calc(15% + 43px);
+          padding-top: 10px;
+          p{
+            color: #666;
+            span{
+              display: inline-block;
+              & + span{
+                padding-left: 20px;
+                position: relative;
+                &::before { 
+                  content: "\2192";
+                  position: absolute;
+                  left: 2px
+                }
+              }
+            }
           }
         }
       }
